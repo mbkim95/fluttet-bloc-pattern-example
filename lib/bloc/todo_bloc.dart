@@ -57,12 +57,13 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   Stream<TodoState> _mapDeleteTodo(DeleteTodoEvent event) async* {
     try {
       if (state is Loaded) {
+        var currentState = state as Loaded;
+
         yield Loading();
 
         await repository.deleteTodo(event.todo);
 
-        var newTodos = (state as Loaded)
-            .todos
+        var newTodos = currentState.todos
             .where((element) => element.id != event.todo.id)
             .toList();
         yield Loaded(todos: newTodos);
